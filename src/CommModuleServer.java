@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -8,21 +9,28 @@ import java.util.HashMap;
 
 public class CommModuleServer {
 	
-	private HashMap<RemoteObjectReference,MyRemote> warehouse;
+	private HashMap<String,MyRemote> warehouse;
 	public CommModuleServer() {
-		warehouse = new HashMap<RemoteObjectReference,MyRemote>();
+		warehouse = new HashMap<String,MyRemote>();
 	}
 	
 	public static void main(String[] args) {
 		
 		CommModuleServer cm = new CommModuleServer();
 		// add test object
-		cm.warehouse.put(arg0, new TestRemoteObject());
+		cm.warehouse.put("testObj", new TestRemoteObject());
+		/* construct ror */
+		// get localhost ip
+		String ipAddr = Inet4Address.getLocalHost().getHostAddress();
 		// hardcoding port number
 		int port = 15640;
+		// hardcoding remote interface name and key
+		RemoteObjectReference ror = new RemoteObjectReference(ipAddr, port,
+				"TestRemoteObjectInterface", 0);
+		
 		ServerSocket ss = null;
 		Socket socket = null;
-		try {
+		try {																																																																																																																																																																																													
 			ss = new ServerSocket(port);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -10,7 +10,7 @@ public class TestClient {
 
 	public static void main(String[] args) {
 		// lookup from registry, hardcoding
-		RemoteObjectReference ror = CommModuleClient.lookup("128.2.246.44",
+		RemoteObjectReference ror = CommModuleClient.lookup("lemonshark.ics.cs.cmu.edu",
 				1099, new RMIMessageLookup("testObj"));
 		if (ror == null) {
 			System.out.println("lookup failed");

@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 
@@ -14,19 +15,29 @@ public class CommModuleServer {
 		warehouse = new HashMap<String,MyRemote>();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		CommModuleServer cm = new CommModuleServer();
 		// add test object
 		cm.warehouse.put("testObj", new TestRemoteObject());
-		/* construct ror */
+		/* start comm with registry, construct ror */
 		// get localhost ip
 		String ipAddr = Inet4Address.getLocalHost().getHostAddress();
 		// hardcoding port number
 		int port = 15640;
 		// hardcoding remote interface name and key
-		RemoteObjectReference ror = new RemoteObjectReference(ipAddr, port,
-				"TestRemoteObjectInterface", 0);
+		RemoteObjectReference rorReg = new RemoteObjectReference(ipAddr, port,
+				"TestRemoteObjectInterface", "testObj");
+		RMIMessageReg msg = new RMIMessageReg(rorReg);
+		// write to registry server, hardcoding registry port number to 1099
+		Socket regSock = new Socket(ipAddr, 1099);
+		ObjectOutputStream outReg = 
+				new ObjectOutputStream(regSock.getOutputStream());
+		outReg.writeObject(msg);
+		outReg.flush();
+		outReg.close();
+		regSock.close();
+		/* finish comm with registry */
 		
 		ServerSocket ss = null;
 		Socket socket = null;
@@ -47,11 +58,26 @@ public class CommModuleServer {
 				output = new ObjectOutputStream(socket.getOutputStream());
 				
 				//do unmarshalling directly and invokes that object directly
+				//now only can from client
 				RMIMessage request = (RMIMessage) input.readObject();
-				socket.close();
+				
 				// Multi-thread starts here if needed, can use an inner thread
 				//class
 				RemoteObjectReference ror = request.getRor();
+				Object callee = cm.warehouse.get(ror.getObjName());
+				
+				request.setCallee(callee);
+				request.invokeMethod();
+				
+				RMIMessage reply = new RMIMessage();
+				reply.setReturnValue(request.getReturnValue());
+				//send back RMIMessage
+				output.writeObject(reply);
+				output.flush();
+				output.close();
+				input.close();
+				
+				socket.close();
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

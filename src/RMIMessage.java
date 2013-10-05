@@ -21,12 +21,16 @@ public class RMIMessage implements Serializable {
 	private String methodName;
 	private Object[] args;
 	private Class[] argsTypes;
+	
 
 	// variables need to get back from server
 	private Object returnValue;
 	private boolean exceptionThrown = false;
 	private Exception exception = null;
 
+	public RMIMessage() {
+		
+	}
 	public RMIMessage(Object callee, String methodName, Object[] args) {
 		this.callee = callee;
 		this.methodName = methodName;
@@ -40,6 +44,7 @@ public class RMIMessage implements Serializable {
 			}
 		}
 	}
+	
 
 	public Object invokeMethod() {
 		Method method = null;
@@ -83,4 +88,25 @@ public class RMIMessage implements Serializable {
 	public Exception getException() {
 		return this.exception;
 	}
+
+	public RemoteObjectReference getRor() {
+		return ror;
+	}
+
+	public void setRor(RemoteObjectReference ror) {
+		this.ror = ror;
+	}
+	public Object getReturnValue() {
+		return returnValue;
+	}
+	public void setReturnValue(Object returnValue) {
+		this.returnValue = returnValue;
+	}
+	public Object getCallee() {
+		return callee;
+	}
+	public void setCallee(Object callee) {
+		this.callee = callee;
+	}
+	
 }

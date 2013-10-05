@@ -44,14 +44,51 @@ public class CommModuleClient {
 		
 		try {
 			output = new ObjectOutputStream(socket.getOutputStream());
+			input = new ObjectInputStream(socket.getInputStream());
 			
 			output.writeObject(request);
 			output.flush();
-			output.close();
 			
-			input = new ObjectInputStream(socket.getInputStream());
 			reply = (RMIMessage) input.readObject();
 			input.close();
+			output.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException ce) {
+			ce.printStackTrace();
+		}
+		
+		return reply;
+	}
+	
+	public static RemoteObjectReference lookup(String ipAddr, int port, RMIMessageLookup msg) {
+		RemoteObjectReference reply = null;
+		Socket socket = null;
+		try {
+			socket = new Socket(InetAddress.getByName(ipAddr), port);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ObjectOutputStream output = null;
+		ObjectInputStream input = null;
+		try {
+			output = new ObjectOutputStream(socket.getOutputStream());
+			
+			output.writeObject(msg);
+			output.flush();
+		
+			
+			input = new ObjectInputStream(socket.getInputStream());
+			reply = (RemoteObjectReference) input.readObject();
+			input.close();
+			output.close();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

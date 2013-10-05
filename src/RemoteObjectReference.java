@@ -41,22 +41,22 @@ public class RemoteObjectReference implements Serializable{
 		this.remoteInterfaceName = remoteInterfaceName;
 	}
 
-	public int getObjKey() {
-		return objKey;
+	public String getObjName() {
+		return objName;
 	}
 
-	public void setObjKey(int objKey) {
-		this.objKey = objKey;
+	public void setObjName(String objName) {
+		this.objName = objName;
 	}
 
 	//need a local reference or other identifier
-	private int objKey;
+	private String objName;
 	
-	public RemoteObjectReference(String ip, int port, String riname, int key) {
+	public RemoteObjectReference(String ip, int port, String riname, String objName) {
 		ipAddr = ip;
 		this.port = port;
 		remoteInterfaceName = riname;
-		objKey = key;
+		this.objName = objName;
 	}
 	
 	/**
@@ -70,6 +70,7 @@ public class RemoteObjectReference implements Serializable{
 		try {
 			Class<?> c = Class.forName(stubName);
 			o = c.newInstance();
+			((MyRemote)o).setRemoteObjectReference(this);
 		} catch (ClassNotFoundException c) {
 			System.out.println("Could not find class " + stubName);
 			c.printStackTrace();

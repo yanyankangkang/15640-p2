@@ -66,13 +66,12 @@ public class CommModuleServer {
 				RemoteObjectReference ror = request.getRor();
 				Object callee = cm.warehouse.get(ror.getObjName());
 				
-				request.setCallee(callee);
-				request.invokeMethod();
+				request.invokeMethod(callee);
 				
-				RMIMessage reply = new RMIMessage();
-				reply.setReturnValue(request.getReturnValue());
+//				RMIMessage reply = new RMIMessage();
+//				reply.setReturnValue(request.getReturnValue());
 				//send back RMIMessage
-				output.writeObject(reply);
+				output.writeObject(request);
 				output.flush();
 				output.close();
 				input.close();

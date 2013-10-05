@@ -17,7 +17,7 @@ public class RMIMessage implements Serializable {
 
 	// variables need to give to server
 	private RemoteObjectReference ror;
-	private Object callee;
+//	private Object callee;
 	private String methodName;
 	private Object[] args;
 	private Class[] argsTypes;
@@ -31,8 +31,8 @@ public class RMIMessage implements Serializable {
 	public RMIMessage() {
 		
 	}
-	public RMIMessage(Object callee, String methodName, Object[] args) {
-		this.callee = callee;
+	public RMIMessage(String methodName, Object[] args) {
+//		this.callee = callee;
 		this.methodName = methodName;
 		this.args = args;
 
@@ -46,10 +46,10 @@ public class RMIMessage implements Serializable {
 	}
 	
 
-	public Object invokeMethod() {
+	public Object invokeMethod(Object callee) {
 		Method method = null;
 		try {
-			method = this.callee.getClass().getMethod(methodName, argsTypes);
+			method = callee.getClass().getMethod(methodName, argsTypes);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -61,7 +61,7 @@ public class RMIMessage implements Serializable {
 		}
 
 		try {
-			this.returnValue = method.invoke(this.callee, this.args);
+			this.returnValue = method.invoke(callee, this.args);
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -102,11 +102,6 @@ public class RMIMessage implements Serializable {
 	public void setReturnValue(Object returnValue) {
 		this.returnValue = returnValue;
 	}
-	public Object getCallee() {
-		return callee;
-	}
-	public void setCallee(Object callee) {
-		this.callee = callee;
-	}
+
 	
 }

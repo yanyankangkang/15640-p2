@@ -17,7 +17,6 @@ public class RMIMessage implements Serializable {
 
 	// variables need to give to server
 	private RemoteObjectReference ror;
-//	private Object callee;
 	private String methodName;
 	private Object[] args;
 	private Class[] argsTypes;
@@ -31,8 +30,8 @@ public class RMIMessage implements Serializable {
 	public RMIMessage() {
 		
 	}
+	
 	public RMIMessage(String methodName, Object[] args) {
-//		this.callee = callee;
 		this.methodName = methodName;
 		this.args = args;
 

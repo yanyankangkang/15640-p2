@@ -19,9 +19,7 @@ public class TestRemoteObjectInterface_stub implements TestRemoteObjectInterface
 		args[0] = name;
 		RMIMessage message = new RMIMessage("sayHello", args);
 		message.setRor(ror);
-		
 		RMIMessage reply = CommModuleClient.sendRequest(message);
-		System.out.println("replay is "+reply);
 		return (String)reply.getReturnValue();
 	}
 

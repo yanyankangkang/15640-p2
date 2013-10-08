@@ -37,7 +37,7 @@ runreg:
 	java -cp "../bin" RMIRegistry
 
 runser:
-	java -cp "../bin" CommModuleServer
+	java -cp "../bin" Server
 
 runcli:
 	java -cp "../bin" TestClient

@@ -11,13 +11,17 @@ CLASSES = \
 	TestRemoteObject.java \
 	RemoteObjectReference.java \
 	RMIMessage.java \
+    RMIMessageInvoke.java \
+    SocketCache.java \
+    RMINaming.java \
 	RMIMessageLookup.java \
 	CommModuleClient.java \
 	CommModuleServer.java \
 	RMIRegistry.java \
 	RMIMessageReg.java \
 	TestClient.java \
-	TestRemoteObjectInterface_stub.java
+	TestRemoteObjectInterface_stub.java \
+    Server.java
 
 default:
 	@echo "make build: build project"
@@ -41,3 +45,15 @@ runser:
 
 runcli:
 	java -cp "../bin" TestClient
+
+runall:
+	@echo "starting registry on port 1099..."
+	java -cp "../bin" RMIRegistry &
+	sleep 1
+	@echo "starting server on port 15640..."
+	java -cp "../bin" Server &
+	sleep 1
+	@echo "starting test client..."
+	@echo "looking for registry on localhost port 1099..."
+	java -cp "../bin" TestClient
+

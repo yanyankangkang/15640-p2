@@ -1,4 +1,3 @@
-import java.io.Serializable;
 
 /**
  * 
@@ -8,18 +7,15 @@ import java.io.Serializable;
  * @author yinxu
  *
  */
-// no need to extends RMIMessage ?
-public class RMIMessageLookup implements Serializable {
+public class RMIMessageLookup extends RMIMessage {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8776322466025700255L;
-
+	private static final long serialVersionUID = -4241134599099905418L;
 	private String remoteObjName;
 	
 	public RMIMessageLookup(String name) {
-		
 		remoteObjName = name;
 	}
 

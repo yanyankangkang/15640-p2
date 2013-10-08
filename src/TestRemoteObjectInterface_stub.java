@@ -4,23 +4,27 @@
 
 /**
  * @author yinxu
- *
+ * 
  */
-public class TestRemoteObjectInterface_stub implements TestRemoteObjectInterface{
+public class TestRemoteObjectInterface_stub implements TestRemoteObjectInterface {
 	private RemoteObjectReference ror;
-	
+
 	public TestRemoteObjectInterface_stub() {
-		
+
 	}
-	
+
 	public String sayHello(String name) throws MyRemoteException {
-		//form a message object
+		// form a message object
 		Object[] args = new String[1];
 		args[0] = name;
-		RMIMessage message = new RMIMessage("sayHello", args);
+		RMIMessageInvoke message = new RMIMessageInvoke("sayHello", args);
 		message.setRor(ror);
-		RMIMessage reply = CommModuleClient.sendRequest(message);
-		return (String)reply.getReturnValue();
+		RMIMessageInvoke reply = CommModuleClient.sendRequest(message);
+		if (reply.exceptionThrown) {
+			throw new MyRemoteException(reply.getException().getMessage());
+		}
+
+		return (String) reply.getReturnValue();
 	}
 
 	@Override
@@ -28,5 +32,5 @@ public class TestRemoteObjectInterface_stub implements TestRemoteObjectInterface
 		// TODO Auto-generated method stub
 		this.ror = ror;
 	}
-	
+
 }

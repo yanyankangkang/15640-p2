@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 /**
  * Serialize and deserialize the RMIMessage, communicate between client and
@@ -18,13 +19,16 @@ public class CommModuleClient {
 
 	/**
 	 * 
-	 * @param request contains the ip address and port number of the server, as well as the service name
+	 * @param request
+	 *            contains the ip address and port number of the server, as well
+	 *            as the service name
 	 * @return add the return value into the message
 	 */
-	public static RMIMessage sendRequest(RMIMessage request) {
+	public static RMIMessageInvoke sendRequest(RMIMessageInvoke request) {
 		// get remote object reference first
 		RemoteObjectReference ror = request.getRor();
-		RMIMessage reply = (RMIMessage) sendMessage(ror.getIpAddr(), ror.getPort(), request);
+		RMIMessageInvoke reply = (RMIMessageInvoke) sendMessage(
+				ror.getIpAddr(), ror.getPort(), request);
 		return reply;
 	}
 
@@ -41,8 +45,10 @@ public class CommModuleClient {
 	 * @return remote object reference from registry server, client use this to
 	 *         talk to server later
 	 */
-	public static RemoteObjectReference lookup(String ipAddr, int port,	RMIMessageLookup msg) {
-		RemoteObjectReference reply = (RemoteObjectReference) sendMessage(ipAddr, port, msg);
+	public static RMIMessageLookup lookup(String ipAddr, int port,
+			RMIMessageLookup msg) {
+		RMIMessageLookup reply = (RMIMessageLookup) sendMessage(ipAddr, port,
+				msg);
 		return reply;
 	}
 
@@ -54,8 +60,13 @@ public class CommModuleClient {
 
 		try {
 			// open the socket to talk to registry server
-			socket = new Socket(InetAddress.getByName(ipAddr), port);
-
+			if (socketCache.containsSocket(ipAddr, port))
+				socket = socketCache.getSocket(ipAddr, port);
+			else {
+				socket = new Socket(ipAddr, port);
+				socketCache.putSocket(socket);
+			}
+			
 			// send the message to specific host and port
 			output = new ObjectOutputStream(socket.getOutputStream());
 			output.writeObject(msg);
@@ -67,7 +78,6 @@ public class CommModuleClient {
 
 			input.close();
 			output.close();
-			socket.close();
 
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -76,9 +86,12 @@ public class CommModuleClient {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException ce) {
+			// TODO Auto-generated catch block
 			ce.printStackTrace();
 		}
 
 		return reply;
 	}
+
+	private static SocketCache socketCache= new SocketCache();
 }

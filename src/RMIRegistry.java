@@ -40,9 +40,11 @@ public class RMIRegistry {
 				// from client for lookup, then send back the ror
 				if (c.equals(Class.forName("RMIMessageLookup"))) {
 					RMIMessageLookup msg = (RMIMessageLookup) inputObj;
+					RemoteObjectReference ror = reg.warehouse.get(msg.getRemoteObjName());
+					msg.setRor(ror);
 					ObjectOutputStream output = new ObjectOutputStream(
 							ss.getOutputStream());
-					output.writeObject(reg.warehouse.get(msg.getRemoteObjName()));
+					output.writeObject(msg);
 					output.flush();
 					output.close();
 					System.out.println("successfully lookup "

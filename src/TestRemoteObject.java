@@ -9,7 +9,9 @@
 public class TestRemoteObject implements TestRemoteObjectInterface{
 	
 	public String sayHello(String name) throws MyRemoteException {
-		return "Hello hehe ~ " + name;
+		if (name.equals("Exception"))
+			throw new MyRemoteException("Test Exception");
+		return "Hello hehe " + name;
 	}
 
 	@Override

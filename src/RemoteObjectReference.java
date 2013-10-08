@@ -9,9 +9,7 @@ import java.io.Serializable;
  *
  */
 public class RemoteObjectReference implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -4362993247531924695L;
 	private String ipAddr;
 	private int port;

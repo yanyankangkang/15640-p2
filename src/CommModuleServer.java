@@ -4,79 +4,97 @@ import java.io.ObjectOutputStream;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
 public class CommModuleServer {
 
-	private static HashMap<String, MyRemote> warehouse;
-	private static String serverIPAddr;
-	private static String registryIPAddr;
-	private static int serverPort;
-	private static int registryPort;
+	private String serverIPAddr;
+	private String registryIPAddr;
+	private int serverPort;
+	private int registryPort;
+	private int CONN_TIMEOUT = 1000;
 
-	public CommModuleServer() throws UnknownHostException {
-		warehouse = new HashMap<String, MyRemote>();
-		serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
-		registryIPAddr = Inet4Address.getLocalHost().getHostAddress();
-		serverPort = 15640;
-		registryPort = 1099;
+	public CommModuleServer(int serverPort) throws UnknownHostException {
+		this.serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
+		this.registryIPAddr = Inet4Address.getLocalHost().getHostAddress();
+		this.serverPort = serverPort;
+		this.registryPort = 1099;
 	}
 
-	public static void main(String[] args) throws IOException {
-
-		// add test object
-		CommModuleServer cm = new CommModuleServer();
-		cm.warehouse.put("testObj", new TestRemoteObject());
-
-		// create a ror and register it into registry server
-		// hardcoding remote interface name and key
-		RemoteObjectReference rorReg = new RemoteObjectReference(serverIPAddr,
-				serverPort, "TestRemoteObjectInterface", "testObj");
-		RMIMessageReg msg = new RMIMessageReg(rorReg);
-		registerObject(msg);
-		
-		startService();
+	public CommModuleServer(int serverPort, String registryIPAddr, int registryPort)
+			throws UnknownHostException {
+		this.serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
+		this.registryIPAddr = registryIPAddr;
+		this.serverPort = serverPort;
+		this.registryPort = registryPort;
 	}
 
-	private static void startService() {
+	public void startService() throws IOException {
 		ServerSocket ss = null;
 		Socket socket = null;
-		try {
-			ss = new ServerSocket(serverPort);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		ss = new ServerSocket(serverPort);
+
+		while (true) {
+			socket = ss.accept();
+			ServingThread servingThread = new ServingThread(socket);
+			servingThread.run();
 		}
 
-		// input/output stream
-		ObjectInputStream input = null;
-		ObjectOutputStream output = null;
-		while (true) {
+	}
+
+	public void registerObject(RMIMessageReg msg) throws UnknownHostException, IOException {
+		Socket regSock = new Socket(registryIPAddr, registryPort);
+		ObjectOutputStream outReg = new ObjectOutputStream(regSock.getOutputStream());
+		outReg.writeObject(msg);
+		outReg.flush();
+		outReg.close();
+		regSock.close();
+	}
+
+	private class ServingThread extends Thread {
+
+		public ServingThread(Socket socket) throws SocketException {
+			this.socket = socket;
+			this.socket.setSoTimeout(CONN_TIMEOUT);
+		}
+
+		public void run() {
 			try {
-				socket = ss.accept();
 				input = new ObjectInputStream(socket.getInputStream());
 				output = new ObjectOutputStream(socket.getOutputStream());
 
 				// do unmarshalling directly and invokes that object directly
 				// now only can from client
-				RMIMessage request = (RMIMessage) input.readObject();
+				RMIMessageInvoke request = null;
+				try {
+					request = (RMIMessageInvoke) input.readObject();
+				} catch (SocketTimeoutException e ) {
+					this.socket.close();
+					e.printStackTrace();
+					return;
+				}
 
-				// Multi-thread starts here if needed, can use an inner thread
-				// class
 				RemoteObjectReference ror = request.getRor();
-				Object callee = warehouse.get(ror.getObjName());
+				Object callee = Server.getWarehouse().get(ror.getObjName());
 
-				request.invokeMethod(callee);
+				try {
+					request.invokeMethod(callee);
+				} catch (MyRemoteException e) {
+					// TODO Auto-generated catch block
+					request.setExceptionThrown(true);
+					request.setException(e);
+				}
 
 				// send back RMIMessage
 				output.writeObject(request);
 				output.flush();
-				
+
 				output.close();
 				input.close();
-				socket.close();
-				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -85,16 +103,9 @@ public class CommModuleServer {
 				e.printStackTrace();
 			}
 		}
-	}
 
-	private static void registerObject(RMIMessage msg)
-			throws UnknownHostException, IOException {
-		Socket regSock = new Socket(registryIPAddr, registryPort);
-		ObjectOutputStream outReg = new ObjectOutputStream(
-				regSock.getOutputStream());
-		outReg.writeObject(msg);
-		outReg.flush();
-		outReg.close();
-		regSock.close();
+		private Socket socket = null;
+		private ObjectInputStream input = null;
+		private ObjectOutputStream output = null;
 	}
 }

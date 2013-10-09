@@ -10,12 +10,15 @@ public class TestClient {
 		RMINaming rmiNaming = new RMINaming();
 		TestRemoteObjectInterface tro = null;
 		try {
-				tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
-				String result = tro.sayHello("Hitler");
-				System.out.println(result);
+				for (int i = 0; i < 10; i++) {
+					tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
+					String result = tro.sayHello("Hitler");
+					System.out.println(result);
+				}
 				
-				result = tro.sayHello("Exception");
-				System.out.println(result);
+				
+//				result = tro.sayHello("Exception");
+//				System.out.println(result);
 		} catch (MyRemoteException e1) {
 			e1.printException();
 		}

@@ -7,12 +7,12 @@ import java.util.Map;
 public class SocketCache {
 	
 	public boolean containsSocket(String ipAddr, int port) {
-		String socketKey = ipAddr + ":" + port;
+		String socketKey = "/" + ipAddr + ":" + port;
 		return cachePool.containsKey(socketKey);
 	}
 	
 	public Socket getSocket(String ipAddr, int port) {
-		String socketKey = ipAddr + ":" + port;
+		String socketKey = "/" + ipAddr + ":" + port;
 		SocketInfo socketInfo = cachePool.get(socketKey);
 		
 		// update the SocketInfo entry

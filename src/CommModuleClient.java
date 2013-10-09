@@ -43,7 +43,7 @@ public class CommModuleClient {
 	 * @param msg
 	 *            message containing service name being sent to registry server
 	 * @return remote object reference from registry server, client use this to
-	 *         talk to server later
+	 *         talk to server laterw
 	 */
 	public static RMIMessageLookup lookup(String ipAddr, int port,
 			RMIMessageLookup msg) {
@@ -64,7 +64,11 @@ public class CommModuleClient {
 				socket = socketCache.getSocket(ipAddr, port);
 			else {
 				socket = new Socket(ipAddr, port);
+				//output = new ObjectOutputStream(socket.getOutputStream());
+				
+				//input = new ObjectInputStream(socket.getInputStream());
 				socketCache.putSocket(socket);
+				
 			}
 			
 			// send the message to specific host and port
@@ -73,6 +77,7 @@ public class CommModuleClient {
 			output.flush();
 
 			// get the reply back from the server
+			
 			input = new ObjectInputStream(socket.getInputStream());
 			reply = input.readObject();
 

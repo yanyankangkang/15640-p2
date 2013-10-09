@@ -1,3 +1,4 @@
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -68,32 +69,37 @@ public class CommModuleServer {
 
 				// do unmarshalling directly and invokes that object directly
 				// now only can from client
-				RMIMessageInvoke request = null;
-				try {
-					request = (RMIMessageInvoke) input.readObject();
-				} catch (SocketTimeoutException e ) {
-					this.socket.close();
-					e.printStackTrace();
-					return;
+				while (true) {
+					RMIMessageInvoke request = null;
+					try {
+						request = (RMIMessageInvoke) input.readObject();
+					} catch (SocketTimeoutException e ) {
+						this.socket.close();
+						e.printStackTrace();
+						return;
+					} catch (EOFException e ) {
+						this.socket.close();
+						return;
+					}
+	
+					RemoteObjectReference ror = request.getRor();
+					Object callee = Server.getWarehouse().get(ror.getObjName());
+	
+					try {
+						request.invokeMethod(callee);
+					} catch (MyRemoteException e) {
+						// TODO Auto-generated catch block
+						request.setExceptionThrown(true);
+						request.setException(e);
+					}
+	
+					// send back RMIMessage
+					output.writeObject(request);
+					output.flush();
+	
+//					output.close();
+//					input.close();
 				}
-
-				RemoteObjectReference ror = request.getRor();
-				Object callee = Server.getWarehouse().get(ror.getObjName());
-
-				try {
-					request.invokeMethod(callee);
-				} catch (MyRemoteException e) {
-					// TODO Auto-generated catch block
-					request.setExceptionThrown(true);
-					request.setException(e);
-				}
-
-				// send back RMIMessage
-				output.writeObject(request);
-				output.flush();
-
-				output.close();
-				input.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

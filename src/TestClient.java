@@ -10,7 +10,7 @@ public class TestClient {
 		RMINaming rmiNaming = new RMINaming();
 		TestRemoteObjectInterface tro = null;
 		try {
-				for (int i = 0; i < 10; i++) {
+				for (int i = 0; i < 2; i++) {
 					tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
 					String result = tro.sayHello("Hitler");
 					System.out.println(result);

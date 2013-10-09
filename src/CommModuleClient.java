@@ -60,30 +60,27 @@ public class CommModuleClient {
 
 		try {
 			// open the socket to talk to registry server
-			if (socketCache.containsSocket(ipAddr, port))
-				socket = socketCache.getSocket(ipAddr, port);
+			if (socketCache.containsSocket(ipAddr, port)) {
+				SocketInfo socketInfo = socketCache.getSocketInfo(ipAddr, port);
+				output = socketInfo.output;
+				output.writeObject(msg);
+				output.flush();
+				
+				input = socketInfo.input;
+				reply = input.readObject();
+			}
 			else {
 				socket = new Socket(ipAddr, port);
-				//output = new ObjectOutputStream(socket.getOutputStream());
+				output = new ObjectOutputStream(socket.getOutputStream());
+				output.writeObject(msg);
+				output.flush();
 				
-				//input = new ObjectInputStream(socket.getInputStream());
-				socketCache.putSocket(socket);
+				input = new ObjectInputStream(socket.getInputStream());
+				reply = input.readObject();
+				socketCache.putSocket(socket, input, output);
 				
 			}
 			
-			// send the message to specific host and port
-			output = new ObjectOutputStream(socket.getOutputStream());
-			output.writeObject(msg);
-			output.flush();
-
-			// get the reply back from the server
-			
-			input = new ObjectInputStream(socket.getInputStream());
-			reply = input.readObject();
-
-			input.close();
-			output.close();
-
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

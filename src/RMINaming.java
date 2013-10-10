@@ -8,8 +8,6 @@ import java.util.HashMap;
  */
 public class RMINaming {
 
-	// private HashMap<RemoteObjectReference, MyRemote> warehouse =
-	// new HashMap<RemoteObjectReference, MyRemote>();
 	private HashMap<String, MyRemote> warehouse = new HashMap<String, MyRemote>();
 	private String registryIPAddr;
 	private int registryPort;

@@ -1,3 +1,4 @@
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -62,15 +63,30 @@ public class CommModuleClient {
 			// open the socket to talk to registry server
 			if (socketCache.containsSocket(ipAddr, port)) {
 				SocketInfo socketInfo = socketCache.getSocketInfo(ipAddr, port);
-				output = socketInfo.output;
-				output.writeObject(msg);
-				output.flush();
 				
-				input = socketInfo.input;
-				reply = input.readObject();
-			}
-			else {
+				if (socketInfo.socket.getInputStream().read() == -1) {
+					System.out.println("socket closed on ther server");
+					socket = new Socket(ipAddr, port);
+//					genNewConn(socket, output, input, msg);
+					output = new ObjectOutputStream(socket.getOutputStream());
+					output.writeObject(msg);
+					output.flush();
+					
+					input = new ObjectInputStream(socket.getInputStream());
+					reply = input.readObject();
+					socketCache.putSocket(socket, input, output);
+				} else {
+					output = socketInfo.output;
+					output.writeObject(msg);
+					output.flush();
+					
+					input = socketInfo.input;
+					reply = input.readObject();
+				}
+				
+			} else {
 				socket = new Socket(ipAddr, port);
+//				genNewConn(socket, output, input, msg);
 				output = new ObjectOutputStream(socket.getOutputStream());
 				output.writeObject(msg);
 				output.flush();
@@ -96,4 +112,16 @@ public class CommModuleClient {
 	}
 
 	private static SocketCache socketCache= new SocketCache();
+	
+	public static void genNewConn(Socket socket, ObjectOutputStream output, ObjectInputStream input, Object msg) {
+		try {
+			output = new ObjectOutputStream(socket.getOutputStream());
+			output.writeObject(msg);
+			output.flush();
+
+			input = new ObjectInputStream(socket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -74,11 +74,15 @@ public class CommModuleServer {
 					try {
 						request = (RMIMessageInvoke) input.readObject();
 					} catch (SocketTimeoutException e ) {
-						this.socket.close();
-						e.printStackTrace();
+						input.close();
+						output.close();
+						socket.close();
+						System.err.println("server socket read time out");
 						return;
 					} catch (EOFException e ) {
-						this.socket.close();
+						input.close();
+						output.close();
+						socket.close();
 						return;
 					}
 	
@@ -97,8 +101,6 @@ public class CommModuleServer {
 					output.writeObject(request);
 					output.flush();
 	
-//					output.close();
-//					input.close();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

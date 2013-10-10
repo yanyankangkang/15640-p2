@@ -20,4 +20,8 @@ public class MyRemoteException extends Exception{
 	public void printException() {
 		System.out.println("MyRemoteException: " + message);
 	}
+	
+	public String getMessage() {
+		return this.message;
+	}
 }

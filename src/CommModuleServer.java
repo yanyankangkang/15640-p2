@@ -115,6 +115,7 @@ public class CommModuleServer {
 						request.invokeMethod(callee);
 					} catch (MyRemoteException e) {
 						// TODO Auto-generated catch block
+						System.out.println("saf");
 						request.setExceptionThrown(true);
 						request.setException(e);
 					}

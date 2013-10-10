@@ -19,4 +19,5 @@ public class TestRemoteObject implements TestRemoteObjectInterface{
 		// TODO Auto-generated method stub
 		
 	}
+	
 }

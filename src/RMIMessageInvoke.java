@@ -22,9 +22,9 @@ public class RMIMessageInvoke extends RMIMessage {
 	private Object returnValue;
 
 	public RMIMessageInvoke() {
-		
+
 	}
-	
+
 	public RMIMessageInvoke(String methodName, Object[] args) {
 		this.methodName = methodName;
 		this.args = args;
@@ -37,9 +37,8 @@ public class RMIMessageInvoke extends RMIMessage {
 			}
 		}
 	}
-	
 
-	public Object invokeMethod(Object callee) throws MyRemoteException{
+	public Object invokeMethod(Object callee) throws MyRemoteException {
 		Method method = null;
 		try {
 			method = callee.getClass().getMethod(methodName, argsTypes);
@@ -55,9 +54,6 @@ public class RMIMessageInvoke extends RMIMessage {
 
 		try {
 			this.returnValue = method.invoke(callee, this.args);
-//		} catch (MyRemoteException e) {
-//			this.exceptionThrown = true;
-//			this.exception = e;
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,20 +65,21 @@ public class RMIMessageInvoke extends RMIMessage {
 		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			// e.printStackTrace();
-			this.exceptionThrown = true;
-			this.exception = new MyRemoteException("InvocationTargetException");
-			return null;
-		} 
+//			this.exceptionThrown = true;
+//			this.exception = new MyRemoteException("InvocationTargetException");
+//			return null;
+			throw new MyRemoteException(e.getTargetException().getMessage());
+		}
 
 		return this.returnValue;
 	}
-	
+
 	public Object getReturnValue() {
 		return returnValue;
 	}
+
 	public void setReturnValue(Object returnValue) {
 		this.returnValue = returnValue;
 	}
 
-	
 }

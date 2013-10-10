@@ -1,4 +1,10 @@
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * 
@@ -16,12 +22,16 @@ public class RemoteObjectReference implements Serializable{
 	private String remoteInterfaceName;
 	//need a local reference or other identifier
 	private String objName;
+	// for stub class download, add path to stub class file
+	private String stubURL;
 	
-	public RemoteObjectReference(String ip, int port, String riname, String objName) {
+	public RemoteObjectReference(String ip, int port, String riname, 
+			String objName, String stubURL) {
 		this.ipAddr = ip;
 		this.port = port;
 		this.remoteInterfaceName = riname;
 		this.objName = objName;
+		this.stubURL = stubURL;
 	}
 	
 	/**
@@ -29,27 +39,74 @@ public class RemoteObjectReference implements Serializable{
 	 * @return
 	 */
 	public Object localise() {
-		//create a stub class as needed
+		//create a stub class as needed. if classNotFound, download from server 
 		Object stubObject = null;
 		String stubName = remoteInterfaceName + "_stub";
+		Class<?> stubClass = null;
 		try {
-			Class<?> stubClass = Class.forName(stubName);
-			stubObject = stubClass.newInstance();
-			((MyRemote)stubObject).setRemoteObjectReference(this);
+			stubClass = Class.forName(stubName);
+			
 		} catch (ClassNotFoundException c) {
 			System.out.println("Could not find class " + stubName);
-			c.printStackTrace();
-			return null;
-		} catch (InstantiationException ie) {
-			System.out.println("Instantiation Exception for " + stubName);
-			ie.printStackTrace();
-			return null;
-		} catch (IllegalAccessException iae) {
-			System.out.println("IllegalAccessException for " + stubName);
-			iae.printStackTrace();
-			return null;
+			System.out.println("Downloading class file " + stubName + ".class...");
+			//c.printStackTrace();
+			downloadStub(stubName);
+			System.out.println("Download succeeded");
+			try {
+				stubClass = Class.forName(stubName);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Download failed");
+				e.printStackTrace();
+			}
+			
 		}
+		
+		try {
+			stubObject = stubClass.newInstance();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		((MyRemote)stubObject).setRemoteObjectReference(this);
 		return stubObject;
+	}
+	
+	/**
+	 * Download the stub class file from remote server
+	 * @return
+	 */
+	public void downloadStub(String fileName) {
+		HttpURLConnection httpConn = null;
+		try {
+			URL url = new URL(stubURL);
+			httpConn = (HttpURLConnection) url.openConnection();
+			int responseCode = httpConn.getResponseCode();
+			if (responseCode == HttpURLConnection.HTTP_OK) {
+				InputStream input = httpConn.getInputStream();
+				FileOutputStream output = new FileOutputStream("./"+fileName+".class");
+				byte[] buffer = new byte[4096];
+				int read = -1;
+				while ((read = input.read(buffer)) != -1) {
+					output.write(buffer, 0, read);
+				}
+				output.close();
+				input.close();
+				System.out.println("File transfer done");
+			} else {
+				System.out.println("HTTP request failed: "+ responseCode);
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		httpConn.disconnect();
 	}
 	
 	public String getIpAddr() {

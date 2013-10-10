@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.Inet4Address;
+import java.net.URL;
 import java.util.HashMap;
 
 public class Server {
@@ -7,6 +8,7 @@ public class Server {
 	private static HashMap<String, MyRemote> warehouse = new HashMap<String, MyRemote>();
 	private static String serverIPAddr;
 	private static int serverPort = 15640;
+	private static int serverDownloadPort = 15440;
 
 	public static void main(String[] args) throws IOException {
 
@@ -16,7 +18,8 @@ public class Server {
 		serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
 		System.err.println("Client should connect to " + serverIPAddr);
 
-		CommModuleServer commModuleServer = new CommModuleServer(serverPort);
+		CommModuleServer commModuleServer = new CommModuleServer(serverPort, 
+				serverDownloadPort);
 		
 		// add test objects
 		warehouse.put("testObj", new TestRemoteObject());
@@ -24,7 +27,7 @@ public class Server {
 		// create a ror and register it into registry server
 		// hard-code remote interface name and key
 		RemoteObjectReference rorReg = new RemoteObjectReference(serverIPAddr,
-				serverPort, "TestRemoteObjectInterface", "testObj");
+				serverPort, "TestRemoteObjectInterface", "testObj", getStubURL());
 		RMIMessageReg msg = new RMIMessageReg(rorReg);
 		commModuleServer.registerObject(msg);
 
@@ -33,6 +36,18 @@ public class Server {
 
 	public static HashMap<String, MyRemote> getWarehouse() {
 		return warehouse;
+	}
+	
+	/**
+	 * return the path to the stub class file
+	 */
+	public static String getStubURL() {
+		String fileName = "TestRemoteObjectInterface"+"_stub.class";
+		String path = null;
+		URL url = Server.class.getProtectionDomain().getCodeSource().getLocation();
+		path = url.getFile();
+		return "http://" + serverIPAddr + ":" + serverDownloadPort + path + fileName;
+		
 	}
 
 }

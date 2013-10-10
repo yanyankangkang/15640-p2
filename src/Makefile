@@ -13,6 +13,7 @@ CLASSES = \
 	RMIMessage.java \
     RMIMessageInvoke.java \
     SocketCache.java \
+	SocketInfo.java \
     RMINaming.java \
 	RMIMessageLookup.java \
 	CommModuleClient.java \
@@ -35,7 +36,7 @@ build: classes
 classes: $(CLASSES:.java=.class)
 
 clean:
-	$(RM) ..bin/*.class
+	$(RM) ../bin/*.class
 
 runreg:
 	java -cp "../bin" RMIRegistry

@@ -3,7 +3,7 @@ import java.net.Inet4Address;
 import java.net.URL;
 import java.util.HashMap;
 
-public class Server {
+public class TestServer {
 
 	private static HashMap<String, MyRemote> warehouse = new HashMap<String, MyRemote>();
 	private static String serverIPAddr;
@@ -21,8 +21,10 @@ public class Server {
 		CommModuleServer commModuleServer = new CommModuleServer(serverPort, 
 				serverDownloadPort);
 		
-		// add test objects
+		// add test object1
 		warehouse.put("testObj", new TestRemoteObject());
+		// add test object using as an argument
+		warehouse.put("testArgObj", new TestArgRemoteObject());
 
 		// create a ror and register it into registry server
 		// hard-code remote interface name and key

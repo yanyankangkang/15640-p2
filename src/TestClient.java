@@ -19,7 +19,7 @@ public class TestClient {
 				continue;
 			}
 			System.out.println(result);
-//			Thread.sleep(3000);
+			Thread.sleep(3000);
 		}
 
 		try {

@@ -110,7 +110,7 @@ public class CommModuleServer {
 					}
 	
 					RemoteObjectReference ror = request.getRor();
-					Object callee = Server.getWarehouse().get(ror.getObjName());
+					Object callee = TestServer.getWarehouse().get(ror.getObjName());
 	
 					try {
 						request.invokeMethod(callee);
@@ -217,7 +217,7 @@ public class CommModuleServer {
 	public String getStubURL() {
 		String fileName = "TestRemoteObjectInterface"+"_stub.class";
 		String path = null;
-		URL url = Server.class.getProtectionDomain().getCodeSource().getLocation();
+		URL url = TestServer.class.getProtectionDomain().getCodeSource().getLocation();
 		path = url.getFile();
 		return "http://" + serverIPAddr + ":" + serverDownloadPort + path + fileName;
 		

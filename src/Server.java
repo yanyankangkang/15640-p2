@@ -27,7 +27,7 @@ public class Server {
 		// create a ror and register it into registry server
 		// hard-code remote interface name and key
 		RemoteObjectReference rorReg = new RemoteObjectReference(serverIPAddr,
-				serverPort, "TestRemoteObjectInterface", "testObj", getStubURL());
+				serverPort, "TestRemoteObjectInterface", "testObj", commModuleServer.getStubURL());
 		RMIMessageReg msg = new RMIMessageReg(rorReg);
 		commModuleServer.registerObject(msg);
 
@@ -38,16 +38,16 @@ public class Server {
 		return warehouse;
 	}
 	
-	/**
-	 * return the path to the stub class file
-	 */
-	public static String getStubURL() {
-		String fileName = "TestRemoteObjectInterface"+"_stub.class";
-		String path = null;
-		URL url = Server.class.getProtectionDomain().getCodeSource().getLocation();
-		path = url.getFile();
-		return "http://" + serverIPAddr + ":" + serverDownloadPort + path + fileName;
-		
-	}
+//	/**
+//	 * return the path to the stub class file
+//	 */
+//	public static String getStubURL() {
+//		String fileName = "TestRemoteObjectInterface"+"_stub.class";
+//		String path = null;
+//		URL url = Server.class.getProtectionDomain().getCodeSource().getLocation();
+//		path = url.getFile();
+//		return "http://" + serverIPAddr + ":" + serverDownloadPort + path + fileName;
+//		
+//	}
 
 }

@@ -14,7 +14,6 @@ public class TestRemoteObject implements TestRemoteObjectInterface{
 		return "Hello hehe " + name;
 	}
 
-	@Override
 	public void setRemoteObjectReference(RemoteObjectReference ror) {
 		// TODO Auto-generated method stub
 		

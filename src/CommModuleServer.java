@@ -12,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.net.UnknownHostException;
 
 
@@ -209,5 +210,17 @@ public class CommModuleServer {
 		int end = line.indexOf(" ", start);
 		String result = line.substring(start,end);
 		return result;
+	}
+	
+	/**
+	 * return the path to the stub class file
+	 */
+	public String getStubURL() {
+		String fileName = "TestRemoteObjectInterface"+"_stub.class";
+		String path = null;
+		URL url = Server.class.getProtectionDomain().getCodeSource().getLocation();
+		path = url.getFile();
+		return "http://" + serverIPAddr + ":" + serverDownloadPort + path + fileName;
+		
 	}
 }

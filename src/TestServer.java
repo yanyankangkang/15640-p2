@@ -11,7 +11,6 @@ public class TestServer {
 
 	public static void main(String[] args) throws IOException {
 
-
 		// user may specify port number here
 		serverPort = 15640;
 		serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
@@ -23,7 +22,6 @@ public class TestServer {
 		// add test object1
 		TestRemoteObject rm1 = new TestRemoteObject();
 		String intName1 = rm1.getClass().getInterfaces()[0].getName();
-		System.out.println(intName1);
 		warehouse.put("testObj", rm1);
 		// add test object using as an argument
 		TestArgRemoteObject rm2 = new TestArgRemoteObject();

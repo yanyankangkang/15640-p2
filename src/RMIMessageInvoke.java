@@ -29,22 +29,19 @@ public class RMIMessageInvoke extends RMIMessage {
 		this.methodName = methodName;
 		this.args = args;
 
-		if (args != null) {
-			int argsLength = args.length;
-			this.argsTypes = new Class[argsLength];
-			for (int i = 0; i < argsLength; i++) {
-				if (args[i] instanceof RemoteObjectReference) {
-					args[i] = TestServer.getWarehouse().get(((RemoteObjectReference)args[i]).getObjName());
-					continue;
-				}
-				this.argsTypes[i] = args[i].getClass();
-			}
-		}
+//		if (args != null) {
+//			int argsLength = args.length;
+//			this.argsTypes = new Class[argsLength];
+//			for (int i = 0; i < argsLength; i++) {
+//				this.argsTypes[i] = args[i].getClass();
+//			}
+//		}
 	}
 
 	public Object invokeMethod(Object callee) throws MyRemoteException {
 		Method method = null;
 		try {
+			System.out.println("The remote method name is: " + methodName);
 			method = callee.getClass().getMethod(methodName, argsTypes);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -86,4 +83,21 @@ public class RMIMessageInvoke extends RMIMessage {
 		this.returnValue = returnValue;
 	}
 
+	public Object[] getArgs() {
+		return args;
+	}
+
+	public void setArgs(Object[] args) {
+		this.args = args;
+	}
+
+	public Class<?>[] getArgsTypes() {
+		return argsTypes;
+	}
+
+	public void setArgsTypes(Class<?>[] argsTypes) {
+		this.argsTypes = argsTypes;
+	}
+
+	
 }

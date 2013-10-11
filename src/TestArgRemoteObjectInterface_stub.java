@@ -38,8 +38,9 @@ public class TestArgRemoteObjectInterface_stub implements TestArgRemoteObjectInt
 	}
 
 	@Override
-	public String demoOnly(String arg) throws MyRemoteException {
+	public String demoOnly(String arg) throws Exception {
 		// unimplemented, doesn't need this method for client side testing
-		return null;
+		Object[] args = {arg};
+		return (String) invoke("demoOnly", args);
 	}
 }

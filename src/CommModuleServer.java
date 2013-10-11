@@ -14,6 +14,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
 
 public class CommModuleServer {
@@ -24,6 +25,8 @@ public class CommModuleServer {
 	private int registryPort;
 	private int serverDownloadPort;
 	private int CONN_TIMEOUT = (int) (1 * 1000);
+	//move part of TestServer
+//	private static HashMap<String, MyRemote> warehouse = new HashMap<String, MyRemote>();
 
 	public CommModuleServer(int serverPort, int downloadPort) throws UnknownHostException {
 		this.serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
@@ -103,7 +106,9 @@ public class CommModuleServer {
 	
 					RemoteObjectReference ror = request.getRor();
 					Object callee = TestServer.getWarehouse().get(ror.getObjName());
-	
+					System.out.println("callee is: " + callee.getClass().getName());
+					parseArgs(request);
+					
 					try {
 						request.invokeMethod(callee);
 					} catch (MyRemoteException e) {
@@ -212,6 +217,30 @@ public class CommModuleServer {
 		URL url = TestServer.class.getProtectionDomain().getCodeSource().getLocation();
 		path = url.getFile();
 		return "http://" + serverIPAddr + ":" + serverDownloadPort + path + fileName;
+		
+	}
+	
+	/**
+	 * parse the arguments of the RMIMessageInvoke
+	 */
+	public void parseArgs(RMIMessageInvoke request) {
+		Object[] args = request.getArgs();
+		Class<?>[] argsTypes = request.getArgsTypes();
+		if (args != null) {
+			argsTypes = new Class[args.length];
+			for (int i = 0; i < args.length; i++) {
+				if (args[i] instanceof RemoteObjectReference) {
+					System.out.println("found a remote argument");
+					System.out.println("hashmap is: " + TestServer.getWarehouse());
+					//hard coding
+					args[i] = TestServer.getWarehouse().get(((RemoteObjectReference)args[i]).getObjName());
+					System.out.println("replaced ror with: "+args[i]);
+				}
+				argsTypes[i] = args[i].getClass();
+			}
+			request.setArgs(args);
+			request.setArgsTypes(argsTypes);
+		}
 		
 	}
 }

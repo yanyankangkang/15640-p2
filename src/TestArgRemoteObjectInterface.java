@@ -7,6 +7,6 @@
  *
  */
 public interface TestArgRemoteObjectInterface extends MyRemote{
-	public String demoOnly(String arg) throws MyRemoteException;
+	public String demoOnly(String arg) throws Exception;
 	
 }

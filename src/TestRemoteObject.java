@@ -14,7 +14,7 @@ public class TestRemoteObject implements TestRemoteObjectInterface{
 		return "Hello hehe " + name;
 	}
 	
-	public String remoteArgTest(TestArgRemoteObjectInterface remoteArg) throws MyRemoteException {
+	public String remoteArgTest(TestArgRemoteObjectInterface remoteArg) throws Exception {
 		return remoteArg.demoOnly("arg");
 	}
 

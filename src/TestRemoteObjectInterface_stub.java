@@ -29,6 +29,7 @@ public class TestRemoteObjectInterface_stub implements
 		// TODO Auto-generated method stub
 		// handle remote object using as arguments
 		Object[] args = { remoteArg.getRemoteObjectReference() };
+		System.out.println("remote ror is: "+remoteArg.getRemoteObjectReference());
 		
 		return (String) invoke("remoteArgTest", args);
 	}

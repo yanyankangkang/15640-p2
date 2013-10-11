@@ -22,12 +22,12 @@ public class TestServer {
 		
 		// add test object1
 		TestRemoteObject rm1 = new TestRemoteObject();
-		//System.out.println(rm1.getClass().getInterfaces()[0]);
-		String intName1 = rm1.getClass().getInterfaces()[0].toString();
+		String intName1 = rm1.getClass().getInterfaces()[0].getName();
+		System.out.println(intName1);
 		warehouse.put("testObj", rm1);
 		// add test object using as an argument
 		TestArgRemoteObject rm2 = new TestArgRemoteObject();
-		String intName2 = rm2.getClass().getInterfaces()[0].toString();
+		String intName2 = rm2.getClass().getInterfaces()[0].getName();
 		warehouse.put("testArgObj", rm2);
 
 		// create a ror and register it into registry server

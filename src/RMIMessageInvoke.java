@@ -35,6 +35,7 @@ public class RMIMessageInvoke extends RMIMessage {
 			for (int i = 0; i < argsLength; i++) {
 				if (args[i] instanceof RemoteObjectReference) {
 					args[i] = TestServer.getWarehouse().get(((RemoteObjectReference)args[i]).getObjName());
+					continue;
 				}
 				this.argsTypes[i] = args[i].getClass();
 			}

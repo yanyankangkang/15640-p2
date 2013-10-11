@@ -33,14 +33,6 @@ public class CommModuleServer {
 		this.serverDownloadPort = downloadPort;
 	}
 
-//	public CommModuleServer(int serverPort, String registryIPAddr, int registryPort)
-//			throws UnknownHostException {
-//		this.serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
-//		this.registryIPAddr = registryIPAddr;
-//		this.serverPort = serverPort;
-//		this.registryPort = registryPort;
-//	}
-
 	public void startService() throws IOException {
 		//new RMIThread
 		ServerThread st = new ServerThread();

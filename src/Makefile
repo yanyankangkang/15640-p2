@@ -22,7 +22,7 @@ CLASSES = \
 	RMIMessageReg.java \
 	TestClient.java \
 	TestRemoteObjectInterface_stub.java \
-    Server.java
+	TestServer.java
 
 default:
 	@echo "make build: build project"
@@ -42,19 +42,8 @@ runreg:
 	java -cp "../bin" RMIRegistry
 
 runser:
-	java -cp "../bin" Server
+	java -cp "../bin" TestServer
 
 runcli:
-	java -cp "../bin" TestClient
-
-runall:
-	@echo "starting registry on port 1099..."
-	java -cp "../bin" RMIRegistry &
-	sleep 1
-	@echo "starting server on port 15640..."
-	java -cp "../bin" Server &
-	sleep 1
-	@echo "starting test client..."
-	@echo "looking for registry on localhost port 1099..."
 	java -cp "../bin" TestClient
 

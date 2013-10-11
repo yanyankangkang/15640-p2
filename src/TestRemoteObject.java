@@ -13,10 +13,20 @@ public class TestRemoteObject implements TestRemoteObjectInterface{
 			throw new MyRemoteException("Test Exception");
 		return "Hello hehe " + name;
 	}
+	
+	public String remoteArgTest(TestArgRemoteObjectInterface remoteArg) throws MyRemoteException {
+		return remoteArg.demoOnly("arg");
+	}
 
 	public void setRemoteObjectReference(RemoteObjectReference ror) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public RemoteObjectReference getRemoteObjectReference() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

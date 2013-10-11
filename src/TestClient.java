@@ -1,4 +1,3 @@
-import java.net.UnknownHostException;
 
 /**
  * @author yinxu
@@ -6,14 +5,18 @@ import java.net.UnknownHostException;
  */
 public class TestClient {
 
-	public static void main(String[] args) throws UnknownHostException, InterruptedException {
+	public static void main(String[] args) throws Exception {
 		RMINaming rmiNaming = new RMINaming();
 		TestRemoteObjectInterface tro = null;
+		TestArgRemoteObjectInterface argument = null;
 		String result = null;
 		for (int i = 0; i < 20; i++) {
 			try {
 				tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
 				result = tro.sayHello("Hitler");
+				argument = (TestArgRemoteObjectInterface) rmiNaming.lookup("testArgObj");
+				System.out.println(tro.remoteArgTest(argument));
+				
 			} catch (MyRemoteException e) {
 				e.printException();
 				continue;

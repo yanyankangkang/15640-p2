@@ -6,39 +6,27 @@
  * @author yinxu
  * 
  */
-public class TestRemoteObjectInterface_stub implements
-		TestRemoteObjectInterface {
+public class TestArgRemoteObjectInterface_stub implements TestArgRemoteObjectInterface{
 	private RemoteObjectReference ror;
-
-	public String sayHello(String name) throws Exception {
-		// form a message object
-		Object[] args = { name };
-		return (String) invoke("sayHello", args);
-
-	}
-
+	
+	
 	@Override
 	public void setRemoteObjectReference(RemoteObjectReference ror) {
 		// TODO Auto-generated method stub
 		this.ror = ror;
 	}
-
+	
 	@Override
-	public String remoteArgTest(TestArgRemoteObjectInterface remoteArg)
-			throws MyRemoteException, InterruptedException {
+	public RemoteObjectReference getRemoteObjectReference() {
 		// TODO Auto-generated method stub
-		// handle remote object using as arguments
-		Object[] args = { remoteArg.getRemoteObjectReference() };
-		
-		return (String) invoke("remoteArgTest", args);
+		return this.ror;
 	}
-
+	
 	public Object invoke(String methodName, Object[] args)
 			throws MyRemoteException, InterruptedException {
 
 		RMIMessageInvoke message = new RMIMessageInvoke(methodName, args);
 		message.setRor(ror);
-
 		RMIMessageInvoke reply = CommModuleClient.sendRequest(message);
 		if (reply == null) {
 			throw new MyRemoteException("Error read reply message from server");
@@ -50,9 +38,8 @@ public class TestRemoteObjectInterface_stub implements
 	}
 
 	@Override
-	public RemoteObjectReference getRemoteObjectReference() {
-		// TODO Auto-generated method stub
-		return this.ror;
+	public String demoOnly(String arg) throws MyRemoteException {
+		// unimplemented, doesn't need this method for client side testing
+		return null;
 	}
-
 }

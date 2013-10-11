@@ -214,8 +214,8 @@ public class CommModuleServer {
 	/**
 	 * return the path to the stub class file
 	 */
-	public String getStubURL() {
-		String fileName = "TestRemoteObjectInterface"+"_stub.class";
+	public String getStubURL(String intName) {
+		String fileName = intName + "_stub.class";
 		String path = null;
 		URL url = TestServer.class.getProtectionDomain().getCodeSource().getLocation();
 		path = url.getFile();

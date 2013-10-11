@@ -21,16 +21,27 @@ public class TestServer {
 				serverDownloadPort);
 		
 		// add test object1
-		warehouse.put("testObj", new TestRemoteObject());
+		TestRemoteObject rm1 = new TestRemoteObject();
+		String intName1 = rm1.getClass().getInterfaces()[0].getName();
+		System.out.println(intName1);
+		warehouse.put("testObj", rm1);
 		// add test object using as an argument
-		warehouse.put("testArgObj", new TestArgRemoteObject());
+		TestArgRemoteObject rm2 = new TestArgRemoteObject();
+		String intName2 = rm2.getClass().getInterfaces()[0].getName();
+		warehouse.put("testArgObj", rm2);
 
 		// create a ror and register it into registry server
 		// hard-code remote interface name and key
-		RemoteObjectReference rorReg = new RemoteObjectReference(serverIPAddr,
-				serverPort, "TestRemoteObjectInterface", "testObj", commModuleServer.getStubURL());
-		RMIMessageReg msg = new RMIMessageReg(rorReg);
-		commModuleServer.registerObject(msg);
+		RemoteObjectReference rorReg1 = new RemoteObjectReference(serverIPAddr,
+				serverPort, intName1, "testObj", commModuleServer.getStubURL(intName1));
+		RMIMessageReg msg1 = new RMIMessageReg(rorReg1);
+		commModuleServer.registerObject(msg1);
+		
+		// for the second remote object
+		RemoteObjectReference rorReg2 = new RemoteObjectReference(serverIPAddr,
+				serverPort, intName2, "testArgObj", commModuleServer.getStubURL(intName2));
+		RMIMessageReg msg2 = new RMIMessageReg(rorReg2);
+		commModuleServer.registerObject(msg2);
 
 		commModuleServer.startService();
 	}

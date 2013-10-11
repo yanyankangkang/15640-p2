@@ -8,6 +8,7 @@ public class TestClient {
 	public static void main(String[] args) throws Exception {
 		RMINaming rmiNaming = new RMINaming();
 		TestRemoteObjectInterface tro = null;
+		TestArgRemoteObjectInterface argument = null;
 		String result = null;
 		System.out.println("Ordinary Test");
 		for (int i = 0; i < 10; i++) {
@@ -25,6 +26,9 @@ public class TestClient {
 			try {
 				tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
 				result = tro.sayHello("Kesden");
+				argument = (TestArgRemoteObjectInterface) rmiNaming.lookup("testArgObj");
+				System.out.println(tro.remoteArgTest(argument));
+				
 			} catch (MyRemoteException e) {
 				e.printException();
 				continue;

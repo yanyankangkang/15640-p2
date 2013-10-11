@@ -33,14 +33,6 @@ public class CommModuleServer {
 		this.serverDownloadPort = downloadPort;
 	}
 
-//	public CommModuleServer(int serverPort, String registryIPAddr, int registryPort)
-//			throws UnknownHostException {
-//		this.serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
-//		this.registryIPAddr = registryIPAddr;
-//		this.serverPort = serverPort;
-//		this.registryPort = registryPort;
-//	}
-
 	public void startService() throws IOException {
 		//new RMIThread
 		ServerThread st = new ServerThread();
@@ -214,8 +206,8 @@ public class CommModuleServer {
 	/**
 	 * return the path to the stub class file
 	 */
-	public String getStubURL() {
-		String fileName = "TestRemoteObjectInterface"+"_stub.class";
+	public String getStubURL(String intName) {
+		String fileName = intName + "_stub.class";
 		String path = null;
 		URL url = TestServer.class.getProtectionDomain().getCodeSource().getLocation();
 		path = url.getFile();

@@ -17,7 +17,7 @@ public class RMINaming {
 		this.registryPort = 1099;
 	}
 
-	public MyRemote lookup(String serviceName) throws MyRemoteException {
+	public MyRemote lookup(String serviceName) throws MyRemoteException, InterruptedException {
 		// check if the table contains the stub object of the ror
 		if (warehouse.containsKey(serviceName)) {
 			return warehouse.get(serviceName);

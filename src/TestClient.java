@@ -6,21 +6,25 @@ import java.net.UnknownHostException;
  */
 public class TestClient {
 
-	public static void main(String[] args) throws UnknownHostException,
-			InterruptedException {
+	public static void main(String[] args) throws UnknownHostException, InterruptedException {
 		RMINaming rmiNaming = new RMINaming();
 		TestRemoteObjectInterface tro = null;
-		try {
-			// for (int i = 0; i < 3; i++) {
-			// tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
-			// String result = tro.sayHello("Hitler");
-			// System.out.println(result);
-			// Thread.sleep(5 * 1000);
-			// }
-			//
+		String result = null;
+		for (int i = 0; i < 20; i++) {
+			try {
+				tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
+				result = tro.sayHello("Hitler");
+			} catch (MyRemoteException e) {
+				e.printException();
+				continue;
+			}
+			System.out.println(result);
+//			Thread.sleep(3000);
+		}
 
+		try {
 			tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
-			String result = tro.sayHello("Exception");
+			result = tro.sayHello("Exception");
 			System.out.println(result);
 		} catch (MyRemoteException e1) {
 			e1.printException();

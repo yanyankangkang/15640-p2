@@ -24,7 +24,11 @@ public class RMIMessageInvoke extends RMIMessage {
 	public RMIMessageInvoke() {
 
 	}
-
+	
+	public RMIMessageInvoke(Object returnValue) {
+		this.returnValue = returnValue;
+	}
+	
 	public RMIMessageInvoke(String methodName, Object[] args) {
 		this.methodName = methodName;
 		this.args = args;
@@ -38,7 +42,7 @@ public class RMIMessageInvoke extends RMIMessage {
 //		}
 	}
 
-	public Object invokeMethod(Object callee) throws MyRemoteException {
+	public RMIMessageInvoke invokeMethod(Object callee) throws MyRemoteException {
 		Method method = null;
 		try {
 			System.out.println("The remote method name is: " + methodName);
@@ -71,8 +75,10 @@ public class RMIMessageInvoke extends RMIMessage {
 //			return null;
 			throw new MyRemoteException(e.getTargetException().getMessage());
 		}
+		
+		RMIMessageInvoke reply = new RMIMessageInvoke(this.returnValue);
 
-		return this.returnValue;
+		return reply;
 	}
 
 	public Object getReturnValue() {

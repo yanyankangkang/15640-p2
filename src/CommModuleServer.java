@@ -89,6 +89,7 @@ public class CommModuleServer {
 				// now only can from client
 				while (true) {
 					RMIMessageInvoke request = null;
+					RMIMessageInvoke reply = null;
 					try {
 						request = (RMIMessageInvoke) input.readObject();
 					} catch (SocketTimeoutException e ) {
@@ -110,15 +111,15 @@ public class CommModuleServer {
 					parseArgs(request);
 					
 					try {
-						request.invokeMethod(callee);
+						reply = request.invokeMethod(callee);
 					} catch (MyRemoteException e) {
 						// TODO Auto-generated catch block
-						request.setExceptionThrown(true);
-						request.setException(e);
+						reply.setExceptionThrown(true);
+						reply.setException(e);
 					}
 	
 					// send back RMIMessage
-					output.writeObject(request);
+					output.writeObject(reply);
 					output.flush();
 	
 				}
@@ -235,6 +236,8 @@ public class CommModuleServer {
 					//hard coding
 					args[i] = TestServer.getWarehouse().get(((RemoteObjectReference)args[i]).getObjName());
 					System.out.println("replaced ror with: "+args[i]);
+					argsTypes[i] = args[i].getClass().getInterfaces()[0];
+					continue;
 				}
 				argsTypes[i] = args[i].getClass();
 			}

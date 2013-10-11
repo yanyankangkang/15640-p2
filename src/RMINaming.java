@@ -37,5 +37,7 @@ public class RMINaming {
 			return stub;
 		}
 	}
+	
+	
 
 }

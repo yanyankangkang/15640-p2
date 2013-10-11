@@ -23,7 +23,7 @@ public class CommModuleServer {
 	private int serverPort;
 	private int registryPort;
 	private int serverDownloadPort;
-	private int CONN_TIMEOUT = 1000;
+	private int CONN_TIMEOUT = (int) (1 * 1000);
 
 	public CommModuleServer(int serverPort, int downloadPort) throws UnknownHostException {
 		this.serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
@@ -95,7 +95,7 @@ public class CommModuleServer {
 				while (true) {
 					RMIMessageInvoke request = null;
 					try {
-						request = (RMIMessageInvoke) input.readObject();	
+						request = (RMIMessageInvoke) input.readObject();
 					} catch (SocketTimeoutException e ) {
 						input.close();
 						output.close();
@@ -116,7 +116,6 @@ public class CommModuleServer {
 						request.invokeMethod(callee);
 					} catch (MyRemoteException e) {
 						// TODO Auto-generated catch block
-						System.out.println("saf");
 						request.setExceptionThrown(true);
 						request.setException(e);
 					}

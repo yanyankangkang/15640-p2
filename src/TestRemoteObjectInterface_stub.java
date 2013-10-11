@@ -13,13 +13,16 @@ public class TestRemoteObjectInterface_stub implements TestRemoteObjectInterface
 
 	}
 
-	public String sayHello(String name) throws MyRemoteException {
+	public String sayHello(String name) throws InterruptedException, MyRemoteException {
 		// form a message object
 		Object[] args = new String[1];
 		args[0] = name;
 		RMIMessageInvoke message = new RMIMessageInvoke("sayHello", args);
 		message.setRor(ror);
 		RMIMessageInvoke reply = CommModuleClient.sendRequest(message);
+		if (reply == null) {
+			throw new MyRemoteException("Error read reply message from server");
+		}
 		if (reply.exceptionThrown) {
 			throw new MyRemoteException(reply.getException().getMessage());
 		}

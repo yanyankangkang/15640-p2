@@ -24,8 +24,9 @@ public class CommModuleClient {
 	 *            contains the ip address and port number of the server, as well
 	 *            as the service name
 	 * @return add the return value into the message
+	 * @throws InterruptedException 
 	 */
-	public static RMIMessageInvoke sendRequest(RMIMessageInvoke request) {
+	public static RMIMessageInvoke sendRequest(RMIMessageInvoke request) throws InterruptedException {
 		// get remote object reference first
 		RemoteObjectReference ror = request.getRor();
 		RMIMessageInvoke reply = (RMIMessageInvoke) sendMessage(
@@ -45,29 +46,37 @@ public class CommModuleClient {
 	 *            message containing service name being sent to registry server
 	 * @return remote object reference from registry server, client use this to
 	 *         talk to server laterw
+	 * @throws InterruptedException 
 	 */
 	public static RMIMessageLookup lookup(String ipAddr, int port,
-			RMIMessageLookup msg) {
+			RMIMessageLookup msg) throws InterruptedException {
 		RMIMessageLookup reply = (RMIMessageLookup) sendMessage(ipAddr, port,
 				msg);
 		return reply;
 	}
 
-	private static Object sendMessage(String ipAddr, int port, Object msg) {
+	private static Object sendMessage(String ipAddr, int port, Object msg) throws InterruptedException {
 		Object reply = null;
 		Socket socket = null;
 		ObjectOutputStream output = null;
 		ObjectInputStream input = null;
 
+		// open the socket to talk to registry/server
 		try {
-			// open the socket to talk to registry server
+			// socket cache hit here
 			if (socketCache.containsSocket(ipAddr, port)) {
 				SocketInfo socketInfo = socketCache.getSocketInfo(ipAddr, port);
-				
-				if (socketInfo.socket.getInputStream().read() == -1) {
-					System.out.println("socket closed on ther server");
+				output = socketInfo.output;
+				try {
+					output.writeObject(msg);
+					output.flush();
+					
+					input = socketInfo.input;
+					reply = input.readObject();
+				} 
+				// if fails to connect the cached socket and its streams, try another time
+				catch (java.net.SocketException e) {
 					socket = new Socket(ipAddr, port);
-//					genNewConn(socket, output, input, msg);
 					output = new ObjectOutputStream(socket.getOutputStream());
 					output.writeObject(msg);
 					output.flush();
@@ -75,18 +84,12 @@ public class CommModuleClient {
 					input = new ObjectInputStream(socket.getInputStream());
 					reply = input.readObject();
 					socketCache.putSocket(socket, input, output);
-				} else {
-					output = socketInfo.output;
-					output.writeObject(msg);
-					output.flush();
-					
-					input = socketInfo.input;
-					reply = input.readObject();
 				}
-				
-			} else {
+								
+			} 
+			// socket cache miss here
+			else {
 				socket = new Socket(ipAddr, port);
-//				genNewConn(socket, output, input, msg);
 				output = new ObjectOutputStream(socket.getOutputStream());
 				output.writeObject(msg);
 				output.flush();
@@ -97,31 +100,26 @@ public class CommModuleClient {
 				
 			}
 			
+		} catch (java.net.ConnectException e) {
+			System.err.println("Server is down");
+			return null;
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		} catch (ClassNotFoundException ce) {
 			// TODO Auto-generated catch block
 			ce.printStackTrace();
+			return null;
 		}
 
 		return reply;
 	}
 
-	private static SocketCache socketCache= new SocketCache();
-	
-	public static void genNewConn(Socket socket, ObjectOutputStream output, ObjectInputStream input, Object msg) {
-		try {
-			output = new ObjectOutputStream(socket.getOutputStream());
-			output.writeObject(msg);
-			output.flush();
+	private static SocketCache socketCache = new SocketCache();
 
-			input = new ObjectInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

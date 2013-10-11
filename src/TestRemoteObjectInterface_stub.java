@@ -17,12 +17,6 @@ public class TestRemoteObjectInterface_stub implements
 
 	}
 
-	public String sayHello(String name) throws Exception {
-		// form a message object
-		Object[] args = new String[1];
-		args[0] = name;
-		RMIMessageInvoke message = new RMIMessageInvoke("sayHello", args);
-=======
 	@Override
 	public void setRemoteObjectReference(RemoteObjectReference ror) {
 		// TODO Auto-generated method stub
@@ -31,7 +25,7 @@ public class TestRemoteObjectInterface_stub implements
 
 	@Override
 	public String remoteArgTest(TestArgRemoteObjectInterface remoteArg)
-			throws MyRemoteException, InterruptedException {
+			throws Exception {
 		// TODO Auto-generated method stub
 		// handle remote object using as arguments
 		Object[] args = { remoteArg.getRemoteObjectReference() };
@@ -40,10 +34,9 @@ public class TestRemoteObjectInterface_stub implements
 	}
 
 	public Object invoke(String methodName, Object[] args)
-			throws MyRemoteException, InterruptedException {
+			throws Exception {
 
 		RMIMessageInvoke message = new RMIMessageInvoke(methodName, args);
->>>>>>> fb0632be8ee922864c821d758162d1e0c89c20d3
 		message.setRor(ror);
 
 		RMIMessageInvoke reply = CommModuleClient.sendRequest(message);

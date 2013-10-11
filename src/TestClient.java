@@ -11,7 +11,7 @@ public class TestClient {
 		TestArgRemoteObjectInterface argument = null;
 		String result = null;
 		System.out.println("Ordinary Test");
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 3; i++) {
 			try {
 				tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
 				result = tro.sayHello("Kesden");
@@ -22,7 +22,7 @@ public class TestClient {
 			System.out.println(result);
 		}
 		System.out.println("Server Timeout Test");
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 3; i++) {
 			try {
 				tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
 				result = tro.sayHello("Kesden");

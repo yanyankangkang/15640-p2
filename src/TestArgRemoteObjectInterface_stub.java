@@ -23,7 +23,7 @@ public class TestArgRemoteObjectInterface_stub implements TestArgRemoteObjectInt
 	}
 	
 	public Object invoke(String methodName, Object[] args)
-			throws MyRemoteException, InterruptedException {
+			throws Exception {
 
 		RMIMessageInvoke message = new RMIMessageInvoke(methodName, args);
 		message.setRor(ror);

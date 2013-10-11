@@ -22,6 +22,8 @@ CLASSES = \
 	RMIMessageReg.java \
 	TestClient.java \
 	TestRemoteObjectInterface_stub.java \
+	TestArgRemoteObjectInterface.java \
+	TestArgRemoteObjectInterface_stub.java \
 	TestServer.java
 
 default:

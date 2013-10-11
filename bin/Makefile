@@ -22,7 +22,9 @@ CLASSES = \
 	RMIMessageReg.java \
 	TestClient.java \
 	TestRemoteObjectInterface_stub.java \
-    TestServer.java
+	TestArgRemoteObjectInterface.java \
+	TestArgRemoteObjectInterface_stub.java \
+	TestServer.java
 
 default:
 	@echo "make build: build project"

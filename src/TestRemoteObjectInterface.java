@@ -7,5 +7,5 @@
  *
  */
 public interface TestRemoteObjectInterface extends MyRemote{
-	public String sayHello(String name) throws MyRemoteException, InterruptedException;
+	public String sayHello(String name) throws Exception;
 }

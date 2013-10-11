@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.net.Inet4Address;
-import java.net.URL;
 import java.util.HashMap;
 
 public class TestServer {
@@ -40,16 +39,5 @@ public class TestServer {
 		return warehouse;
 	}
 	
-//	/**
-//	 * return the path to the stub class file
-//	 */
-//	public static String getStubURL() {
-//		String fileName = "TestRemoteObjectInterface"+"_stub.class";
-//		String path = null;
-//		URL url = Server.class.getProtectionDomain().getCodeSource().getLocation();
-//		path = url.getFile();
-//		return "http://" + serverIPAddr + ":" + serverDownloadPort + path + fileName;
-//		
-//	}
 
 }

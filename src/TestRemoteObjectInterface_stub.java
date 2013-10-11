@@ -13,7 +13,7 @@ public class TestRemoteObjectInterface_stub implements TestRemoteObjectInterface
 
 	}
 
-	public String sayHello(String name) throws InterruptedException, MyRemoteException {
+	public String sayHello(String name) throws Exception {
 		// form a message object
 		Object[] args = new String[1];
 		args[0] = name;

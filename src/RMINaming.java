@@ -17,6 +17,11 @@ public class RMINaming {
 		this.registryPort = 1099;
 	}
 
+    public RMINaming(String host, String regPort) throws UnknownHostException {
+        this.registryIPAddr = host;
+        this.registryPort = Integer.parseInt(regPort);
+    }
+
 	public MyRemote lookup(String serviceName) throws Exception {
 		// check if the table contains the stub object of the ror
 		if (warehouse.containsKey(serviceName)) {

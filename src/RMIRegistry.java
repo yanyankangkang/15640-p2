@@ -21,9 +21,24 @@ public class RMIRegistry {
 		warehouse = new HashMap<String, RemoteObjectReference>();
 	}
 
+
+	public RMIRegistry(String regPort) {
+		warehouse = new HashMap<String, RemoteObjectReference>();
+        this.port = Integer.parseInt(regPort);
+	}
+
 	public static void main(String[] args) {
-		RMIRegistry reg = new RMIRegistry();
+
+        RMIRegistry reg = null; 
+        if (args.length == 2 && args[0].equals("-p")) {
+            reg = new RMIRegistry(args[1]);
+        } else {
+            System.err.println("incorrect args");
+        }
+        
 		System.out.println("RMIRegistry started");
+
+        
 
 		try {
 			ServerSocket socket = new ServerSocket(reg.port);

@@ -28,11 +28,11 @@ public class CommModuleServer {
 	//move part of TestServer
 //	private static HashMap<String, MyRemote> warehouse = new HashMap<String, MyRemote>();
 
-	public CommModuleServer(int serverPort, int downloadPort) throws UnknownHostException {
+	public CommModuleServer(int serverPort, int downloadPort, String regPort) throws UnknownHostException {
 		this.serverIPAddr = Inet4Address.getLocalHost().getHostAddress();
 		this.registryIPAddr = Inet4Address.getLocalHost().getHostAddress();
 		this.serverPort = serverPort;
-		this.registryPort = 1099;
+		this.registryPort = Integer.parseInt(regPort);
 		this.serverDownloadPort = downloadPort;
 	}
 
@@ -89,7 +89,7 @@ public class CommModuleServer {
 				// now only can from client
 				while (true) {
 					RMIMessageInvoke request = null;
-					RMIMessageInvoke reply = null;
+					RMIMessageInvoke reply = new RMIMessageInvoke();
 					try {
 						request = (RMIMessageInvoke) input.readObject();
 					} catch (SocketTimeoutException e ) {

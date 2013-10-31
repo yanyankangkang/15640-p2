@@ -17,7 +17,7 @@ public class TestServer {
 		System.err.println("Client should connect to " + serverIPAddr);
 
 		CommModuleServer commModuleServer = new CommModuleServer(serverPort, 
-				serverDownloadPort);
+				serverDownloadPort,args[1]);
 		
 		// add test object1
 		TestRemoteObject rm1 = new TestRemoteObject();
@@ -42,6 +42,7 @@ public class TestServer {
 		commModuleServer.registerObject(msg2);
 
 		commModuleServer.startService();
+		System.out.println("sever side hashcode: "+rm1.hashCode());
 	}
 
 	public static HashMap<String, MyRemote> getWarehouse() {

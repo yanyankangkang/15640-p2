@@ -24,7 +24,6 @@ public class TestClient {
 		 for (int i = 0; i < 3; i++) {
 		 try {
 		 tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
-		 System.out.println("client side hashcode: " + tro.hashCode());
 		 result = tro.sayHello("Kesden");
 		 } catch (MyRemoteException e) {
 		 e.printException();
@@ -50,8 +49,6 @@ public class TestClient {
 		try {
 			tro = (TestRemoteObjectInterface) rmiNaming.lookup("testObj");
 			argument = (TestArgRemoteObjectInterface) rmiNaming.lookup("testArgObj");
-			System.out.println("stub is: " + argument);
-			// System.out.println(argument.demoOnly("arg"));
 			System.out.println(tro.remoteArgTest(argument));
 		} catch (MyRemoteException e) {
 			e.printException();

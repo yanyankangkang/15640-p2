@@ -41,11 +41,11 @@ clean:
 	$(RM) ../bin/*.class
 
 runreg:
-	java -cp "../bin" RMIRegistry -p 15441
+	java -cp "../bin" RMIRegistry -p $(port)
 
 runser:
-	java -cp "../bin" TestServer -p 15441
+	java -cp "../bin" TestServer -p $(port)
 
 runcli:
-	java -cp "../bin" TestClient -h blueshark.ics.cs.cmu.edu -p 15441
+	java -cp "../bin" TestClient -h $(host) -p $(port)
 

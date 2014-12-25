@@ -13,10 +13,6 @@ public class TestClient {
             System.err.println("incorrect args!");
         }
 
-        
-
-
-
 		TestRemoteObjectInterface tro = null;
 		TestArgRemoteObjectInterface argument = null;
 		String result = null;

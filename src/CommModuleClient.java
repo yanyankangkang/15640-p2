@@ -45,7 +45,7 @@ public class CommModuleClient {
 	 * @param msg
 	 *            message containing service name being sent to registry server
 	 * @return remote object reference from registry server, client use this to
-	 *         talk to server laterw
+	 *         talk to server later
 	 * @throws Exception
 	 */
 	public static RMIMessageLookup lookup(String ipAddr, int port,
